@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Опитувальник: Досвід роботи з дизайном</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f4f0;
+    color: #1a1a1a;
+    line-height: 1.6;
+  }
+
+  .shell {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  header {
+    margin-bottom: 40px;
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 24px;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  header p {
+    color: #555;
+    font-size: 0.9rem;
+  }
+
+  .progress-bar {
+    background: #e0e0e0;
+    border-radius: 4px;
+    height: 4px;
+    margin-top: 16px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #1a1a1a;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .block {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .block.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .block-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .block-label {
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .block-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .question {
+    margin-bottom: 32px;
+  }
+
+  .question label.q-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+  }
+
+  .q-num {
+    display: inline-block;
+    background: #eee;
+    border-radius: 2px;
+    padding: 1px 7px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-right: 8px;
+    color: #555;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 12px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    background: #fff;
+    transition: border-color 0.2s;
+  }
+  textarea:focus { outline: none; border-color: #1a1a1a; }
+
+  .choices { display: flex; flex-direction: column; gap: 8px; }
+
+  .choice-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #fff;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    font-size: 0.9rem;
+  }
+  .choice-item:hover { border-color: #999; }
+  .choice-item input { margin-top: 2px; flex-shrink: 0; accent-color: #1a1a1a; }
+  .choice-item.selected { border-color: #1a1a1a; background: #f9f9f7; }
+
+  .scale-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .scale-btn {
+    width: 40px; height: 40px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .scale-btn:hover { border-color: #999; }
+  .scale-btn.selected { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+  .scale-label { font-size: 0.78rem; color: #888; }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: #fff;
+  }
+  input[type="text"]:focus { outline: none; border-color: #1a1a1a; }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid #ddd;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #1a1a1a;
+    color: #fff;
+  }
+  .btn-primary:hover { background: #333; }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1.5px solid #ccc;
+    color: #555;
+  }
+  .btn-secondary:hover { border-color: #999; color: #1a1a1a; }
+
+  .btn-danger {
+    background: transparent;
+    border: 1.5px solid #e0e0e0;
+    color: #999;
+    margin-left: auto;
+    font-size: 0.8rem;
+    padding: 10px 18px;
+  }
+  .btn-danger:hover { border-color: #e55; color: #e55; }
+
+  .step-indicator {
+    font-size: 0.8rem;
+    color: #888;
+    margin-left: auto;
+  }
+
+  .hint {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* Summary screen */
+  .summary-screen {
+    display: none;
+  }
+  .summary-screen.active { display: block; }
+
+  .summary-header {
+    text-align: center;
+    padding: 40px 0 32px;
+  }
+  .summary-icon { font-size: 3rem; margin-bottom: 16px; }
+  .summary-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+  .summary-sub { color: #666; }
+
+  .summary-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    border: 1px solid #e5e5e5;
+  }
+  .summary-section h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    margin-bottom: 12px;
+  }
+  .answer-row {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .answer-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .answer-q { font-size: 0.82rem; color: #666; margin-bottom: 4px; }
+  .answer-a { font-size: 0.9rem; font-weight: 500; }
+
+  .export-btns {
+    display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  @media(max-width: 600px) {
+    .meta-grid { grid-template-columns: 1fr; }
+    .scale-wrap { gap: 6px; }
+    .scale-btn { width: 34px; height: 34px; font-size: 0.78rem; }
+  }
+
+  @media print {
+    .nav, .btn, .progress-bar { display: none !important; }
+    .block { display: block !important; }
+    body { background: white; }
+  }
+
+  .segment-badge {
+    display: inline-block;
+    background: #f0ece4;
+    border: 1px solid #d4c9b4;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6b5e3e;
+    margin-bottom: 20px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #e5e5e5;
+    margin: 28px 0;
+  }
+
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: #fff;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+  }
+  select:focus { outline: none; border-color: #1a1a1a; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header>
+    <h1>Досвід роботи з дизайном та комунікаціями</h1>
+    <p>Глибинне інтерв'ю · Дослідження незакритих потреб</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <!-- BLOCK 0: Screening -->
+  <div class="block active" id="block-0">
+    <div class="block-header">
+      <span class="block-label">Блок 0</span>
+      <span class="block-title">Скринінг та сегментація</span>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">S1</span> Як би ви описали свою роль найближче до правди?</label>
+      <div class="choices" id="s1-choices">
+        <label class="choice-item">
+          <input type="radio" name="s1" value="A"> Маркетолог / маркетинг-директор у компанії
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="s1" value="D"> Власник або директор середнього/малого бізнесу
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="s1" value="B"> Фрілансер, консультант, коуч — будую особистий бренд онлайн
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="s1" value="B2"> Інфлюєнсер / контент-мейкер
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="s1" value="E"> Співробітник або керівник маркетингової агенції
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="s1" value="C"> Мікромаркетолог — веду сторінку сам/сама
+        </label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">S2</span> Чи маєте ви зараз активну потребу в графічному оформленні?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="s2" value="constant"> Так, постійно</label>
+        <label class="choice-item"><input type="radio" name="s2" value="situational"> Так, але ситуативно / під проєкти</label>
+        <label class="choice-item"><input type="radio" name="s2" value="past"> Ні, але було в минулому</label>
+        <label class="choice-item"><input type="radio" name="s2" value="no"> Ні, і не передбачаю</label>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-primary" onclick="nextBlock('block-1')">Далі →</button>
+      <span class="step-indicator" id="step-0">Крок 1 з ~7</span>
+    </div>
+  </div>
+
+  <!-- BLOCK 1: Universal -->
+  <div class="block" id="block-1">
+    <div class="block-header">
+      <span class="block-label">Блок 1</span>
+      <span class="block-title">Поточний стан роботи з дизайном</span>
+    </div>
+    <div class="segment-badge" id="segment-badge-1"></div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">1.1</span> Опишіть, як зараз влаштований процес отримання дизайну у вашому випадку. Хто це робить і як?</label>
+      <textarea name="q1_1" placeholder="Є окремий виконавець, суміщена роль, самостійно..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">1.2</span> Як часто виникає потреба в новому або зміненому дизайні?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="q1_2" value="daily"> Щодня / кілька разів на тиждень</label>
+        <label class="choice-item"><input type="radio" name="q1_2" value="weekly"> Раз на тиждень – раз на місяць</label>
+        <label class="choice-item"><input type="radio" name="q1_2" value="monthly"> Раз на кілька місяців</label>
+        <label class="choice-item"><input type="radio" name="q1_2" value="rare"> Рідше або ситуативно</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">1.3</span> Які типи графічних матеріалів вам потрібні найчастіше? <em style="font-weight:400;color:#888">(можна кілька)</em></label>
+      <div class="choices">
+        <label class="choice-item"><input type="checkbox" name="q1_3" value="social"> Пости та Stories для Instagram / Facebook</label>
+        <label class="choice-item"><input type="checkbox" name="q1_3" value="pres"> Презентації (для клієнтів, партнерів, інвесторів)</label>
+        <label class="choice-item"><input type="checkbox" name="q1_3" value="banners"> Банери / реклама (онлайн або офлайн)</label>
+        <label class="choice-item"><input type="checkbox" name="q1_3" value="landing"> Лендинг або сторінка продукту</label>
+        <label class="choice-item"><input type="checkbox" name="q1_3" value="email"> Email-розсилки</label>
+        <label class="choice-item"><input type="checkbox" name="q1_3" value="brand"> Логотип, фірмовий стиль, брендбук</label>
+        <label class="choice-item"><input type="checkbox" name="q1_3" value="motion"> Відеографіка / motion</label>
+        <label class="choice-item"><input type="checkbox" name="q1_3" value="docs"> Документи, шаблони, комерційні пропозиції</label>
+        <label class="choice-item"><input type="checkbox" name="q1_3" value="print"> Поліграфія (листівки, плакати, упаковка)</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">1.4</span> Як ви зазвичай формулюєте завдання для дизайнера?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="q1_4" value="ref"> Даю референси + описую словами що хочу</label>
+        <label class="choice-item"><input type="radio" name="q1_4" value="brief"> Є бриф або технічне завдання</label>
+        <label class="choice-item"><input type="radio" name="q1_4" value="result"> Кажу загальний результат — нехай сам пропонує</label>
+        <label class="choice-item"><input type="radio" name="q1_4" value="examples"> Малюю / показую на прикладах</label>
+        <label class="choice-item"><input type="radio" name="q1_4" value="chaotic"> Немає чіткого процесу — кожного разу по-різному</label>
+        <label class="choice-item"><input type="radio" name="q1_4" value="self"> Використовую шаблони (Canva, Figma) — сам/сама</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">1.5</span> Наскільки ви задоволені тим, як зараз вирішується питання дизайну?</label>
+      <div class="scale-wrap" id="scale-1-5">
+        <span class="scale-label">погано</span>
+        <button class="scale-btn" onclick="selectScale('scale-1-5', this, 'q1_5', 1)" type="button">1</button>
+        <button class="scale-btn" onclick="selectScale('scale-1-5', this, 'q1_5', 2)" type="button">2</button>
+        <button class="scale-btn" onclick="selectScale('scale-1-5', this, 'q1_5', 3)" type="button">3</button>
+        <button class="scale-btn" onclick="selectScale('scale-1-5', this, 'q1_5', 4)" type="button">4</button>
+        <button class="scale-btn" onclick="selectScale('scale-1-5', this, 'q1_5', 5)" type="button">5</button>
+        <button class="scale-btn" onclick="selectScale('scale-1-5', this, 'q1_5', 6)" type="button">6</button>
+        <button class="scale-btn" onclick="selectScale('scale-1-5', this, 'q1_5', 7)" type="button">7</button>
+        <button class="scale-btn" onclick="selectScale('scale-1-5', this, 'q1_5', 8)" type="button">8</button>
+        <button class="scale-btn" onclick="selectScale('scale-1-5', this, 'q1_5', 9)" type="button">9</button>
+        <button class="scale-btn" onclick="selectScale('scale-1-5', this, 'q1_5', 10)" type="button">10</button>
+        <span class="scale-label">чудово</span>
+      </div>
+      <input type="hidden" name="q1_5" id="q1_5" value="">
+      <div style="margin-top: 14px;">
+        <label class="q-label" style="font-weight:400;font-size:0.85rem;margin-bottom:8px;">Що найбільше не влаштовує?</label>
+        <textarea name="q1_5_comment" placeholder="Вільна відповідь..." style="min-height:70px;"></textarea>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">1.6</span> Чи є у вас відчуття, що є якась «дірка» — потреба в дизайні, яку ніхто не закриває або закриває погано?</label>
+      <textarea name="q1_6" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <hr class="divider">
+    <div class="block-header" style="margin-bottom:20px;">
+      <span class="block-label">Блок 1B</span>
+      <span class="block-title">Пошук виконавців</span>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">F1</span> Як ви шукаєте дизайнерів або виконавців? <em style="font-weight:400;color:#888">(можна кілька)</em></label>
+      <div class="choices">
+        <label class="choice-item"><input type="checkbox" name="f1" value="recommend"> Рекомендації від знайомих / колег</label>
+        <label class="choice-item"><input type="checkbox" name="f1" value="freelance"> Біржі фрілансу (Upwork, Freelancehunt, Kabanchik тощо)</label>
+        <label class="choice-item"><input type="checkbox" name="f1" value="publics"> Дизайн-паблики та Telegram-канали</label>
+        <label class="choice-item"><input type="checkbox" name="f1" value="portfolio"> Портфоліо на Behance / Dribbble</label>
+        <label class="choice-item"><input type="checkbox" name="f1" value="social"> Instagram / TikTok дизайнерів</label>
+        <label class="choice-item"><input type="checkbox" name="f1" value="agency"> Агенції</label>
+        <label class="choice-item"><input type="checkbox" name="f1" value="linkedin"> LinkedIn</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">F2</span> Яким був ваш останній досвід пошуку дизайнера? Що пішло не так або що здивувало?</label>
+      <textarea name="f2" placeholder="Скільки часу пішло, скільки кандидатів, яке відчуття від процесу..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">F3</span> Що для вас найскладніше у пошуку виконавця? <em style="font-weight:400;color:#888">(можна кілька)</em></label>
+      <div class="choices">
+        <label class="choice-item"><input type="checkbox" name="f3" value="portfolio"> Важко оцінити якість по портфоліо — незрозуміло, чи підійде</label>
+        <label class="choice-item"><input type="checkbox" name="f3" value="nonpro"> Більшість — «самоназвані дизайнери», а не справжні фахівці</label>
+        <label class="choice-item"><input type="checkbox" name="f3" value="price"> Не знаю, скільки це має коштувати / складно порівняти ціни</label>
+        <label class="choice-item"><input type="checkbox" name="f3" value="niche"> Знайти людину, яка розуміє мій бізнес або нішу</label>
+        <label class="choice-item"><input type="checkbox" name="f3" value="deadline"> Знайти того, хто вкладається в терміни</label>
+        <label class="choice-item"><input type="checkbox" name="f3" value="brief"> Складно пояснити що хочу — і отримати саме це</label>
+        <label class="choice-item"><input type="checkbox" name="f3" value="trust"> Не знаю, кому довіряти без рекомендацій</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">F4</span> Чи траплялось таке: прийняли роботу, заплатили, але результат був «не зовсім те»? Що трапилось?</label>
+      <textarea name="f4" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">F5</span> Чи зверталися ви до агенцій? У чому різниця між агенцією і фрілансером у вашому досвіді?</label>
+      <textarea name="f5" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-secondary" onclick="prevBlock('block-0')">← Назад</button>
+      <button class="btn btn-primary" onclick="goToSegmentBlock()">Далі →</button>
+    </div>
+  </div>
+
+  <!-- BLOCK 2A: Marketer -->
+  <div class="block" id="block-2A">
+    <div class="block-header">
+      <span class="block-label">Блок 2A</span>
+      <span class="block-title">Маркетолог / Маркетинг-директор</span>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">A1</span> Скільки дизайнерів зараз у вашій команді чи на регулярному аутсорсі?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="a1" value="0"> 0 (все через агенцію або ad hoc)</label>
+        <label class="choice-item"><input type="radio" name="a1" value="1"> 1 (штатний або постійний підрядник)</label>
+        <label class="choice-item"><input type="radio" name="a1" value="2-3"> 2–3</label>
+        <label class="choice-item"><input type="radio" name="a1" value="4+"> 4+</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">A2</span> Як розподіляється робота між «масштабними кампаніями» і щоденною рутиною?</label>
+      <textarea name="a2" placeholder="Що відноситься до рутини? Хто це робить?"></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">A3</span> Яка рутинна дизайн-робота найчастіше «загасає» або виконується повільно / незадовільно?</label>
+      <textarea name="a3" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">A4</span> Чи є у вас брендбук або гайдлайни, якими користуються дизайнери?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="a4" value="active"> Так, є і ним активно користуються</label>
+        <label class="choice-item"><input type="radio" name="a4" value="rarely"> Є, але рідко дотримуються</label>
+        <label class="choice-item"><input type="radio" name="a4" value="formal"> Є формально, але реально не діє</label>
+        <label class="choice-item"><input type="radio" name="a4" value="no"> Немає</label>
+      </div>
+      <div style="margin-top:12px;">
+        <textarea name="a4_comment" placeholder="Хто і як контролює відповідність стилю?..." style="min-height:70px;"></textarea>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">A5</span> Яка частина матеріалів від дизайнера відправляється в доопрацювання? Чому найчастіше?</label>
+      <textarea name="a5" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">A6</span> Як ви оцінюєте якість роботи дизайнера? Які критерії?</label>
+      <textarea name="a6" placeholder="Чи є чіткі KPI, чи це відчуття?..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">A7</span> Якби у вас був необмежений бюджет на дизайн-процес — що б ви змінили насамперед?</label>
+      <textarea name="a7" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">A8</span> Чи є внутрішній конфлікт між тим, що потрібно маркетингу, і тим, що дизайнер вважає «красивим»?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="a8" value="often"> Так, регулярно</label>
+        <label class="choice-item"><input type="radio" name="a8" value="sometimes"> Іноді</label>
+        <label class="choice-item"><input type="radio" name="a8" value="rare"> Рідко</label>
+        <label class="choice-item"><input type="radio" name="a8" value="no"> Ні</label>
+      </div>
+      <div style="margin-top:12px;">
+        <textarea name="a8_comment" placeholder="Якщо так — як ви це вирішуєте?..." style="min-height:60px;"></textarea>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-secondary" onclick="prevBlock('block-1')">← Назад</button>
+      <button class="btn btn-primary" onclick="nextBlock('block-3')">Далі →</button>
+    </div>
+  </div>
+
+  <!-- BLOCK 2B: Influencer / Personal Brand -->
+  <div class="block" id="block-2B">
+    <div class="block-header">
+      <span class="block-label">Блок 2B</span>
+      <span class="block-title">Інфлюєнсер / Особистий бренд</span>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">B1</span> Де зараз є ваша присутність онлайн? <em style="font-weight:400;color:#888">(можна кілька)</em></label>
+      <div class="choices">
+        <label class="choice-item"><input type="checkbox" name="b1" value="instagram"> Instagram</label>
+        <label class="choice-item"><input type="checkbox" name="b1" value="telegram"> Telegram-канал</label>
+        <label class="choice-item"><input type="checkbox" name="b1" value="youtube"> YouTube</label>
+        <label class="choice-item"><input type="checkbox" name="b1" value="tiktok"> TikTok</label>
+        <label class="choice-item"><input type="checkbox" name="b1" value="linkedin"> LinkedIn</label>
+        <label class="choice-item"><input type="checkbox" name="b1" value="site"> Власний сайт / блог</label>
+        <label class="choice-item"><input type="checkbox" name="b1" value="podcast"> Подкаст</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">B2</span> Хто зараз відповідає за візуальне оформлення ваших каналів?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="b2" value="self"> Я сам / сама (вручну або через шаблони)</label>
+        <label class="choice-item"><input type="radio" name="b2" value="ai"> Я сам / сама за допомогою ШІ-інструментів</label>
+        <label class="choice-item"><input type="radio" name="b2" value="smm"> SMM-менеджер, який також оформлює</label>
+        <label class="choice-item"><input type="radio" name="b2" value="designer"> Окремий дизайнер</label>
+        <label class="choice-item"><input type="radio" name="b2" value="none"> Ніхто — оформлення мінімальне або відсутнє</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">B3</span> Чи влаштовує вас поточна якість візуального оформлення?</label>
+      <div class="scale-wrap" id="scale-b3">
+        <span class="scale-label">не влаштовує</span>
+        <button class="scale-btn" onclick="selectScale('scale-b3', this, 'b3', 1)" type="button">1</button>
+        <button class="scale-btn" onclick="selectScale('scale-b3', this, 'b3', 2)" type="button">2</button>
+        <button class="scale-btn" onclick="selectScale('scale-b3', this, 'b3', 3)" type="button">3</button>
+        <button class="scale-btn" onclick="selectScale('scale-b3', this, 'b3', 4)" type="button">4</button>
+        <button class="scale-btn" onclick="selectScale('scale-b3', this, 'b3', 5)" type="button">5</button>
+        <button class="scale-btn" onclick="selectScale('scale-b3', this, 'b3', 6)" type="button">6</button>
+        <button class="scale-btn" onclick="selectScale('scale-b3', this, 'b3', 7)" type="button">7</button>
+        <button class="scale-btn" onclick="selectScale('scale-b3', this, 'b3', 8)" type="button">8</button>
+        <button class="scale-btn" onclick="selectScale('scale-b3', this, 'b3', 9)" type="button">9</button>
+        <button class="scale-btn" onclick="selectScale('scale-b3', this, 'b3', 10)" type="button">10</button>
+        <span class="scale-label">повністю задоволений/а</span>
+      </div>
+      <input type="hidden" name="b3" id="b3" value="">
+      <div style="margin-top:12px;">
+        <textarea name="b3_comment" placeholder="Якщо ні — що саме хотілося б по-іншому?..." style="min-height:70px;"></textarea>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">B4</span> Чи є у вас продукти (курс, консультація, чекліст, марафон тощо)?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="b4" value="yes"> Так, є</label>
+        <label class="choice-item"><input type="radio" name="b4" value="plan"> Планую зробити</label>
+        <label class="choice-item"><input type="radio" name="b4" value="no"> Ні</label>
+      </div>
+      <div style="margin-top:12px;">
+        <textarea name="b4_comment" placeholder="Яким є їх 'пакування' зараз — лендинг, сторінка в соцмережі?..." style="min-height:60px;"></textarea>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">B5</span> Коли ви створювали лендинг або сторінку продукту — що для вас було важливішим: щоб вона збирала заявки чи щоб виглядала відповідно до стилю?</label>
+      <textarea name="b5" placeholder="Чи думали про обидва аспекти одночасно?..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">B6</span> Чи є у вас відчуття власного візуального стилю? Опишіть або покажіть приклади.</label>
+      <textarea name="b6" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">B7</span> Чи виникало бажання «прокачати» свій візуал, але щось заважало?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="checkbox" name="b7" value="who"> Не знаю, до кого звернутись</label>
+        <label class="choice-item"><input type="checkbox" name="b7" value="money"> Дорого</label>
+        <label class="choice-item"><input type="checkbox" name="b7" value="unclear"> Не знаю, що саме хочу / як описати</label>
+        <label class="choice-item"><input type="checkbox" name="b7" value="time"> Немає часу займатись цим питанням</label>
+        <label class="choice-item"><input type="checkbox" name="b7" value="doubt"> Не впевнений/а, що це дасть результат</label>
+        <label class="choice-item"><input type="checkbox" name="b7" value="ok"> Ні, все влаштовує</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">B8</span> Якщо ви використовуєте ШІ для генерації візуалів — що влаштовує, а що ні?</label>
+      <textarea name="b8" placeholder="Стиль, контроль результату, час, передбачуваність..."></textarea>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-secondary" onclick="prevBlock('block-1')">← Назад</button>
+      <button class="btn btn-primary" onclick="nextBlock('block-3')">Далі →</button>
+    </div>
+  </div>
+
+  <!-- BLOCK 2C: Micro-marketer DIY -->
+  <div class="block" id="block-2C">
+    <div class="block-header">
+      <span class="block-label">Блок 2C</span>
+      <span class="block-title">Мікромаркетолог / DIY</span>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">C1</span> Якими інструментами ви користуєтесь для оформлення? <em style="font-weight:400;color:#888">(можна кілька)</em></label>
+      <div class="choices">
+        <label class="choice-item"><input type="checkbox" name="c1" value="canva"> Canva</label>
+        <label class="choice-item"><input type="checkbox" name="c1" value="express"> Adobe Express</label>
+        <label class="choice-item"><input type="checkbox" name="c1" value="figma"> Figma (самостійно)</label>
+        <label class="choice-item"><input type="checkbox" name="c1" value="ai"> ШІ-генератори (Midjourney, DALL·E, Stable Diffusion тощо)</label>
+        <label class="choice-item"><input type="checkbox" name="c1" value="chatgpt"> ChatGPT / Claude для текстів + власна верстка</label>
+        <label class="choice-item"><input type="checkbox" name="c1" value="templates"> Шаблони з Pinterest / Behance</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">C2</span> Що вас найбільше обмежує при самостійному оформленні? <em style="font-weight:400;color:#888">(можна кілька)</em></label>
+      <div class="choices">
+        <label class="choice-item"><input type="checkbox" name="c2" value="taste"> Не вистачає дизайнерського смаку / бачення</label>
+        <label class="choice-item"><input type="checkbox" name="c2" value="time"> Займає забагато часу</label>
+        <label class="choice-item"><input type="checkbox" name="c2" value="amateur"> Результат виглядає «аматорськи»</label>
+        <label class="choice-item"><input type="checkbox" name="c2" value="style"> Важко підтримувати єдиний стиль</label>
+        <label class="choice-item"><input type="checkbox" name="c2" value="skills"> Не знаю, як правильно працювати з типографікою, кольорами</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">C3</span> Чи хотіли б ви отримати чіткі правила — «твій стиль у 3 кольорах і 2 шрифтах» — щоб далі робити все самостійно?</label>
+      <div class="scale-wrap" id="scale-c3">
+        <span class="scale-label">зовсім ні</span>
+        <button class="scale-btn" onclick="selectScale('scale-c3', this, 'c3', 1)" type="button">1</button>
+        <button class="scale-btn" onclick="selectScale('scale-c3', this, 'c3', 2)" type="button">2</button>
+        <button class="scale-btn" onclick="selectScale('scale-c3', this, 'c3', 3)" type="button">3</button>
+        <button class="scale-btn" onclick="selectScale('scale-c3', this, 'c3', 4)" type="button">4</button>
+        <button class="scale-btn" onclick="selectScale('scale-c3', this, 'c3', 5)" type="button">5</button>
+        <button class="scale-btn" onclick="selectScale('scale-c3', this, 'c3', 6)" type="button">6</button>
+        <button class="scale-btn" onclick="selectScale('scale-c3', this, 'c3', 7)" type="button">7</button>
+        <button class="scale-btn" onclick="selectScale('scale-c3', this, 'c3', 8)" type="button">8</button>
+        <button class="scale-btn" onclick="selectScale('scale-c3', this, 'c3', 9)" type="button">9</button>
+        <button class="scale-btn" onclick="selectScale('scale-c3', this, 'c3', 10)" type="button">10</button>
+        <span class="scale-label">дуже хотіла б</span>
+      </div>
+      <input type="hidden" name="c3" id="c3" value="">
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">C4</span> Якби був доступний короткий формат «як краще виглядати в Instagram за допомогою ШІ» — ви б скористались?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="c4" value="yes"> Так, безумовно</label>
+        <label class="choice-item"><input type="radio" name="c4" value="price"> Залежить від ціни</label>
+        <label class="choice-item"><input type="radio" name="c4" value="maybe"> Скоріш ні</label>
+        <label class="choice-item"><input type="radio" name="c4" value="no"> Ні</label>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-secondary" onclick="prevBlock('block-1')">← Назад</button>
+      <button class="btn btn-primary" onclick="nextBlock('block-3')">Далі →</button>
+    </div>
+  </div>
+
+  <!-- BLOCK 2D: Medium Business -->
+  <div class="block" id="block-2D">
+    <div class="block-header">
+      <span class="block-label">Блок 2D</span>
+      <span class="block-title">Середній / малий бізнес</span>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">D1</span> Чи є у вас зараз логотип і фірмовий стиль?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="d1" value="active"> Так, і ми ними активно користуємось</label>
+        <label class="choice-item"><input type="radio" name="d1" value="old"> Є, але він вже застарів або нас не влаштовує</label>
+        <label class="choice-item"><input type="radio" name="d1" value="formal"> Є формально, але нічого не застосовується</label>
+        <label class="choice-item"><input type="radio" name="d1" value="no"> Немає</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">D2</span> Як ваш логотип / стиль з'явився?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="d2" value="freelancer"> Замовляли у дизайнера</label>
+        <label class="choice-item"><input type="radio" name="d2" value="agency"> Замовляли в агенції</label>
+        <label class="choice-item"><input type="radio" name="d2" value="self"> Зробили самостійно або силами команди</label>
+        <label class="choice-item"><input type="radio" name="d2" value="legacy"> Дістався «у спадок» від попередньої версії бізнесу</label>
+        <label class="choice-item"><input type="radio" name="d2" value="ai"> Згенерували за допомогою AI / конструктора</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">D3</span> Якщо стиль вас не влаштовує — що заважає змінити? <em style="font-weight:400;color:#888">(можна кілька)</em></label>
+      <div class="choices">
+        <label class="choice-item"><input type="checkbox" name="d3" value="clients"> Клієнти вже звикли до поточного вигляду</label>
+        <label class="choice-item"><input type="checkbox" name="d3" value="money"> Немає бюджету</label>
+        <label class="choice-item"><input type="checkbox" name="d3" value="process"> Не знаю, як правильно організувати цей процес</label>
+        <label class="choice-item"><input type="checkbox" name="d3" value="risk"> Боюсь, що новий вийде не кращим</label>
+        <label class="choice-item"><input type="checkbox" name="d3" value="time"> Немає часу займатись цим</label>
+        <label class="choice-item"><input type="checkbox" name="d3" value="roi"> Не знаю, чи це вплине на бізнес-результат</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">D4</span> Якщо бізнес не росте або є проблеми з клієнтами — чи пов'язуєте ви це з тим, як ви виглядаєте?</label>
+      <textarea name="d4" placeholder="Чи думали про аудит ринкового позиціонування?..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">D5</span> Якщо б ви отримали новий логотип і набір матеріалів — ви знаєте, що з ними робити далі? Де і як вони мають з'явитись?</label>
+      <textarea name="d5" placeholder="Вивіска, сайт, соцмережі, упаковка, документи..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">D6</span> Якщо колись змінювали щось у візуальній комунікації — як реагували клієнти та партнери?</label>
+      <textarea name="d6" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">D7</span> Чи є у вас людина, яка відповідає за те, щоб всі матеріали виглядали однаково і відповідно до стилю?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="d7" value="yes"> Так</label>
+        <label class="choice-item"><input type="radio" name="d7" value="partial"> Частково</label>
+        <label class="choice-item"><input type="radio" name="d7" value="no"> Ні, кожен робить як може</label>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-secondary" onclick="prevBlock('block-1')">← Назад</button>
+      <button class="btn btn-primary" onclick="nextBlock('block-3')">Далі →</button>
+    </div>
+  </div>
+
+  <!-- BLOCK 2E: Agency -->
+  <div class="block" id="block-2E">
+    <div class="block-header">
+      <span class="block-label">Блок 2E</span>
+      <span class="block-title">Маркетингова агенція</span>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">E1</span> Як ваша агенція вирішує питання дизайну для клієнтів?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="e1" value="inhouse"> Штатні дизайнери</label>
+        <label class="choice-item"><input type="radio" name="e1" value="regular"> Регулярні підрядники / фрілансери</label>
+        <label class="choice-item"><input type="radio" name="e1" value="adhoc"> Ситуативний пошук під кожен проєкт</label>
+        <label class="choice-item"><input type="radio" name="e1" value="mix"> Комбінація</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">E2</span> Яка частина клієнтських запитів пов'язана з дизайном, але НЕ є частиною великої кампанії?</label>
+      <textarea name="e2" placeholder="Рутинні правки, ситуативні матеріали, оформлення під поточні потреби..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">E3</span> Як ви оцінюєте якість дизайнерів, яких залучаєте? Що є найбільшою проблемою?</label>
+      <textarea name="e3" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">E4</span> Чи є серед ваших клієнтів такі, у кого є незакрита дизайн-потреба, але її складно «упакувати» у стандартну послугу?</label>
+      <textarea name="e4" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-secondary" onclick="prevBlock('block-1')">← Назад</button>
+      <button class="btn btn-primary" onclick="nextBlock('block-3')">Далі →</button>
+    </div>
+  </div>
+
+  <!-- BLOCK 3: Final Universal -->
+  <div class="block" id="block-3">
+    <div class="block-header">
+      <span class="block-label">Блок 3</span>
+      <span class="block-title">Цінність, бюджет, ідеальний стан</span>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">3.1</span> Скільки ви зараз витрачаєте на дизайн на місяць (приблизно)?</label>
+      <div class="choices">
+        <label class="choice-item"><input type="radio" name="q3_1" value="zero"> 0 — роблю сам або безкоштовні інструменти</label>
+        <label class="choice-item"><input type="radio" name="q3_1" value="low"> До $50 / до 2 000 грн</label>
+        <label class="choice-item"><input type="radio" name="q3_1" value="mid"> $50–200 / 2 000–8 000 грн</label>
+        <label class="choice-item"><input type="radio" name="q3_1" value="high"> $200–500 / 8 000–20 000 грн</label>
+        <label class="choice-item"><input type="radio" name="q3_1" value="premium"> $500+ / 20 000+ грн</label>
+        <label class="choice-item"><input type="radio" name="q3_1" value="variable"> Не знаю / залежить від проєкту</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">3.2</span> Чи є розуміння, яку цінність дає дизайн для вашого бізнесу / особистого бренду?</label>
+      <textarea name="q3_2" placeholder="Це утилітарна функція чи стратегічний актив?..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">3.3</span> Що для вас означає «добрий дизайн»? Як ви це визначаєте?</label>
+      <textarea name="q3_3" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">3.4</span> Якою має бути ідеальна взаємодія з дизайнером або дизайн-сервісом?</label>
+      <textarea name="q3_4" placeholder="Швидкість, комунікація, прогнозованість результату, стабільність..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">3.5</span> Чи є у вас відчуття, що ви «платите більше, ніж отримуєте» — або вкладаєте більше часу і нервів, ніж варто?</label>
+      <textarea name="q3_5" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">3.6</span> Уявіть: хтось бере на себе весь «головний біль» з дизайном — від пошуку виконавця до контролю якості. Скільки це коштувало б вашого часу і нервів, якщо порахувати реально?</label>
+      <textarea name="q3_6" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">3.7</span> Якби ви могли «замовити» ідеальну послугу або продукт у сфері дизайну — що б це було?</label>
+      <textarea name="q3_7" placeholder="Відкрите поле — будь-яка відповідь цінна..."></textarea>
+    </div>
+
+    <div class="question">
+      <label class="q-label"><span class="q-num">3.8</span> Чи використовуєте ви ШІ-інструменти для дизайну? Яке ваше ставлення до AI-генерації у візуальних комунікаціях?</label>
+      <textarea name="q3_8" placeholder="Вільна відповідь..."></textarea>
+    </div>
+
+    <hr class="divider">
+    <div class="block-header" style="margin-bottom:20px;">
+      <span class="block-label">Метадані</span>
+      <span class="block-title">Нотатки інтерв'юера</span>
+    </div>
+
+    <div class="meta-grid">
+      <div class="question" style="margin-bottom:0;">
+        <label class="q-label" style="font-size:0.85rem;">Дата інтерв'ю</label>
+        <input type="text" name="meta_date" placeholder="дд.мм.рррр" id="meta_date">
+      </div>
+      <div class="question" style="margin-bottom:0;">
+        <label class="q-label" style="font-size:0.85rem;">Ім'я / нікнейм</label>
+        <input type="text" name="meta_name" placeholder="необов'язково">
+      </div>
+    </div>
+    <div class="question" style="margin-top:16px;">
+      <label class="q-label" style="font-size:0.85rem;">Ключовий інсайт / нотатка</label>
+      <textarea name="meta_insight" placeholder="Що здивувало, що запам'яталось..." style="min-height:70px;"></textarea>
+    </div>
+    <div class="question">
+      <label class="q-label" style="font-size:0.85rem;">ICP (ідеальний клієнт)?</label>
+      <div class="choices" style="flex-direction:row;flex-wrap:wrap;gap:8px;">
+        <label class="choice-item" style="flex:1;min-width:120px;"><input type="radio" name="meta_icp" value="yes"> Так</label>
+        <label class="choice-item" style="flex:1;min-width:120px;"><input type="radio" name="meta_icp" value="maybe"> Можливо</label>
+        <label class="choice-item" style="flex:1;min-width:120px;"><input type="radio" name="meta_icp" value="no"> Ні</label>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-secondary" onclick="goBackFromBlock3()">← Назад</button>
+      <button class="btn btn-primary" onclick="showSummary()">Завершити →</button>
+    </div>
+  </div>
+
+  <!-- SUMMARY SCREEN -->
+  <div class="summary-screen" id="summary-screen">
+    <div class="summary-header">
+      <div class="summary-icon">✓</div>
+      <div class="summary-title">Інтерв'ю завершено</div>
+      <div class="summary-sub" id="summary-date"></div>
+    </div>
+
+    <div id="summary-content"></div>
+
+    <div class="export-btns">
+      <button class="btn btn-primary" onclick="window.print()">Роздрукувати / PDF</button>
+      <button class="btn btn-secondary" onclick="copyToClipboard()">Скопіювати відповіді</button>
+      <button class="btn btn-secondary" onclick="resetForm()">Нове інтерв'ю</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ──────────────────────────────────────────────
+// STATE
+// ──────────────────────────────────────────────
+let currentSegment = null;
+let currentBlock = 'block-0';
+let prevSegmentBlock = null;
+
+const SEGMENT_LABELS = {
+  'A':  'Маркетолог / Маркетинг-директор',
+  'B':  'Інфлюєнсер / Особистий бренд',
+  'B2': 'Інфлюєнсер / Контент-мейкер',
+  'C':  'Мікромаркетолог / DIY',
+  'D':  'Середній / малий бізнес',
+  'E':  'Агенція',
+};
+
+const BLOCK_ORDER = ['block-0','block-1','block-2X','block-3'];
+const TOTAL_STEPS = 4;
+
+// ──────────────────────────────────────────────
+// NAVIGATION
+// ──────────────────────────────────────────────
+function showBlock(blockId) {
+  document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById(blockId);
+  if (el) { el.classList.add('active'); currentBlock = blockId; }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProgress();
+}
+
+function nextBlock(blockId) { showBlock(blockId); }
+function prevBlock(blockId) { showBlock(blockId); }
+
+function goToSegmentBlock() {
+  // read segment
+  const s1 = document.querySelector('input[name="s1"]:checked');
+  if (!s1) { currentSegment = 'A'; } else { currentSegment = s1.value; }
+
+  // map B2 → B block
+  const blockMap = { 'A':'block-2A', 'B':'block-2B', 'B2':'block-2B', 'C':'block-2C', 'D':'block-2D', 'E':'block-2E' };
+  const targetBlock = blockMap[currentSegment] || 'block-2A';
+  prevSegmentBlock = targetBlock;
+
+  // update badge
+  const badge = document.getElementById('segment-badge-1');
+  badge.textContent = SEGMENT_LABELS[currentSegment] || '';
+
+  showBlock(targetBlock);
+}
+
+function goBackFromBlock3() {
+  if (prevSegmentBlock) { showBlock(prevSegmentBlock); }
+  else { showBlock('block-1'); }
+}
+
+function updateProgress() {
+  const stepMap = { 'block-0': 1, 'block-1': 2, 'block-2A': 3, 'block-2B': 3, 'block-2C': 3, 'block-2D': 3, 'block-2E': 3, 'block-3': 4 };
+  const step = stepMap[currentBlock] || 1;
+  const pct = Math.round((step / TOTAL_STEPS) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ──────────────────────────────────────────────
+// SCALE BUTTONS
+// ──────────────────────────────────────────────
+function selectScale(containerId, btn, fieldName, value) {
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const field = document.getElementById(fieldName);
+  if (field) field.value = value;
+}
+
+// ──────────────────────────────────────────────
+// CHOICE ITEM HIGHLIGHTING
+// ──────────────────────────────────────────────
+document.addEventListener('change', function(e) {
+  if (e.target.type === 'radio' || e.target.type === 'checkbox') {
+    const parent = e.target.closest('.choices');
+    if (!parent) return;
+    if (e.target.type === 'radio') {
+      parent.querySelectorAll('.choice-item').forEach(ci => ci.classList.remove('selected'));
+      e.target.closest('.choice-item').classList.add('selected');
+    } else {
+      e.target.closest('.choice-item').classList.toggle('selected', e.target.checked);
+    }
+  }
+});
+
+// ──────────────────────────────────────────────
+// COLLECT ALL DATA
+// ──────────────────────────────────────────────
+function collectData() {
+  const data = {};
+  // text areas & inputs
+  document.querySelectorAll('textarea, input[type="text"], input[type="hidden"]').forEach(el => {
+    if (el.name && el.value) data[el.name] = el.value;
+  });
+  // radios
+  document.querySelectorAll('input[type="radio"]:checked').forEach(el => {
+    data[el.name] = el.value;
+  });
+  // checkboxes
+  const cbGroups = {};
+  document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+    if (!cbGroups[el.name]) cbGroups[el.name] = [];
+    if (el.checked) cbGroups[el.name].push(el.value);
+  });
+  Object.assign(data, cbGroups);
+  return data;
+}
+
+// ──────────────────────────────────────────────
+// SUMMARY
+// ──────────────────────────────────────────────
+const QUESTION_LABELS = {
+  's1': 'Роль',
+  's2': 'Активна потреба в дизайні',
+  'q1_1': '1.1 Як влаштований процес дизайну',
+  'q1_2': '1.2 Частота потреби',
+  'q1_3': '1.3 Типи матеріалів',
+  'q1_4': '1.4 Як формулює завдання',
+  'q1_5': '1.5 Задоволеність (1–10)',
+  'q1_5_comment': '1.5 Що не влаштовує',
+  'q1_6': '1.6 Незакрита потреба',
+  'f1': 'F1 Канали пошуку дизайнера',
+  'f2': 'F2 Останній досвід пошуку',
+  'f3': 'F3 Що найскладніше у пошуку',
+  'f4': 'F4 Прийняли роботу — результат не те',
+  'f5': 'F5 Досвід з агенціями',
+  'a1': 'A1 К-сть дизайнерів у команді',
+  'a2': 'A2 Кампанії vs рутина',
+  'a3': 'A3 Що загасає в рутині',
+  'a4': 'A4 Брендбук / гайдлайни',
+  'a5': 'A5 Частота доопрацювань',
+  'a6': 'A6 Критерії оцінки якості',
+  'a7': 'A7 Що змінили б при необм. бюджеті',
+  'a8': 'A8 Конфлікт маркетинг vs дизайн',
+  'b1': 'B1 Канали присутності',
+  'b2': 'B2 Хто відповідає за візуал',
+  'b3': 'B3 Якість оформлення (1–10)',
+  'b3_comment': 'B3 Що хотілося б по-іншому',
+  'b4': 'B4 Наявність продуктів',
+  'b5': 'B5 Лендинг: функція vs стиль',
+  'b6': 'B6 Власний візуальний стиль',
+  'b7': 'B7 Що заважало прокачати візуал',
+  'b8': 'B8 ШІ для генерації візуалів',
+  'c1': 'C1 Інструменти оформлення',
+  'c2': 'C2 Що обмежує при DIY',
+  'c3': 'C3 Зацікавленість стайлгайдом (1–10)',
+  'c4': 'C4 Інтерес до ШІ-гайду для Instagram',
+  'd1': 'D1 Наявність логотипу і стилю',
+  'd2': 'D2 Звідки з\'явився стиль',
+  'd3': 'D3 Що заважає змінити',
+  'd4': 'D4 Зв\'язок вигляду і бізнес-результату',
+  'd5': 'D5 Знають, що робити з новим лого',
+  'd6': 'D6 Реакція клієнтів на зміни',
+  'd7': 'D7 Відповідальний за стиль',
+  'e1': 'E1 Модель дизайну в агенції',
+  'e2': 'E2 Позакампанійні дизайн-запити',
+  'e3': 'E3 Проблеми з підрядниками',
+  'e4': 'E4 Незакриті потреби клієнтів',
+  'q3_1': '3.1 Бюджет на дизайн/місяць',
+  'q3_2': '3.2 Цінність дизайну',
+  'q3_3': '3.3 Що таке «добрий дизайн»',
+  'q3_4': '3.4 Ідеальна взаємодія з дизайнером',
+  'q3_5': '3.5 Платять більше, ніж отримують',
+  'q3_6': '3.6 Скільки коштує «головний біль»',
+  'q3_7': '3.7 Ідеальна послуга',
+  'q3_8': '3.8 Ставлення до ШІ в дизайні',
+  'meta_date': 'Дата',
+  'meta_name': 'Ім\'я',
+  'meta_insight': 'Ключовий інсайт',
+  'meta_icp': 'ICP?',
+};
+
+function showSummary() {
+  const data = collectData();
+  const date = data.meta_date || new Date().toLocaleDateString('uk-UA');
+
+  let html = '';
+  let currentSection = '';
+
+  const sectionMap = {
+    's': 'Скринінг',
+    'q1': 'Блок 1 — Поточний стан',
+    'f': 'Блок 1B — Пошук виконавців',
+    'a': 'Блок 2A — Маркетолог',
+    'b': 'Блок 2B — Інфлюєнсер',
+    'c': 'Блок 2C — DIY',
+    'd': 'Блок 2D — Бізнес',
+    'e': 'Блок 2E — Агенція',
+    'q3': 'Блок 3 — Цінність і бюджет',
+    'meta': 'Нотатки',
+  };
+
+  function getSectionKey(key) {
+    if (key.startsWith('s')) return 's';
+    if (key.startsWith('q1') || key === 'q1_5_comment' || key === 'q1_6') return 'q1';
+    if (key.startsWith('f')) return 'f';
+    if (key.startsWith('a')) return 'a';
+    if (key.startsWith('b')) return 'b';
+    if (key.startsWith('c')) return 'c';
+    if (key.startsWith('d')) return 'd';
+    if (key.startsWith('e')) return 'e';
+    if (key.startsWith('q3')) return 'q3';
+    if (key.startsWith('meta')) return 'meta';
+    return 'other';
+  }
+
+  const allKeys = Object.keys(QUESTION_LABELS);
+  let lastSection = null;
+
+  allKeys.forEach(key => {
+    if (!data[key] || (Array.isArray(data[key]) && data[key].length === 0)) return;
+    const sk = getSectionKey(key);
+    if (sk !== lastSection) {
+      if (lastSection !== null) html += '</div>';
+      html += `<div class="summary-section"><h3>${sectionMap[sk] || sk}</h3>`;
+      lastSection = sk;
+    }
+    const label = QUESTION_LABELS[key] || key;
+    const val = Array.isArray(data[key]) ? data[key].join(', ') : data[key];
+    html += `<div class="answer-row"><div class="answer-q">${label}</div><div class="answer-a">${val}</div></div>`;
+  });
+  if (lastSection !== null) html += '</div>';
+
+  document.getElementById('summary-content').innerHTML = html;
+  document.getElementById('summary-date').textContent = 'Дата: ' + date;
+
+  document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+  document.getElementById('summary-screen').classList.add('active');
+  document.getElementById('progressFill').style.width = '100%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ──────────────────────────────────────────────
+// COPY TO CLIPBOARD
+// ──────────────────────────────────────────────
+function copyToClipboard() {
+  const data = collectData();
+  let text = 'РЕЗУЛЬТАТИ ІНТЕРВ\'Ю\n';
+  text += '==================\n\n';
+  Object.keys(QUESTION_LABELS).forEach(key => {
+    if (!data[key] || (Array.isArray(data[key]) && data[key].length === 0)) return;
+    const val = Array.isArray(data[key]) ? data[key].join(', ') : data[key];
+    text += `${QUESTION_LABELS[key]}:\n${val}\n\n`;
+  });
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Відповіді скопійовано в буфер обміну');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    alert('Відповіді скопійовано');
+  });
+}
+
+// ──────────────────────────────────────────────
+// RESET
+// ──────────────────────────────────────────────
+function resetForm() {
+  if (!confirm('Почати нове інтерв\'ю? Поточні відповіді буде очищено.')) return;
+  document.querySelectorAll('textarea').forEach(t => t.value = '');
+  document.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+  document.querySelectorAll('input[type="hidden"]').forEach(i => i.value = '');
+  document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(i => i.checked = false);
+  document.querySelectorAll('.choice-item').forEach(ci => ci.classList.remove('selected'));
+  document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('summary-screen').classList.remove('active');
+  currentSegment = null; prevSegmentBlock = null;
+  showBlock('block-0');
+}
+
+// ──────────────────────────────────────────────
+// AUTO-SET TODAY
+// ──────────────────────────────────────────────
+window.addEventListener('load', () => {
+  const today = new Date().toLocaleDateString('uk-UA');
+  const d = document.getElementById('meta_date');
+  if (d) d.placeholder = today;
+  updateProgress();
+});
+</script>
+</body>
+</html>
